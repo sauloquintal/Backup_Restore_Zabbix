@@ -7,7 +7,7 @@ Os scripts foram escritos para realizar o backup ou restore das configurações 
 
 Porem pode ser utilizado dentro do sistema para realizar backup ou restauração sem nenhuma adaptação e sem a necessidade do uso do bacula.
 
-É necessário criar dentro do sistema do Zabbix antes de rodar o script os diretórios a seguir: /home/backup/zabbix/
+É necessário criar dentro do sistema que esteja rodando o serviço do Zabbix antes de rodar o script os diretórios a seguir: /home/backup/zabbix/
 
 A princípio não é necessária nenhuma adaptação no script onde foi testado no Zabbix 5.0. Caso faça a utilização em outra versão é necessário verificar os diretórios que o 
 script cópia e compacta.
