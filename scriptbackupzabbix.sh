@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#Backup do schema e do config do banco de dados do zabbix.(IGNORANDO AS MAIORES TABELAS)
+
+DBNAME=zabbix
+DBUSER=USER
+DBPASS=PASSWORD
+BK_DEST=/home/backup/zabbix
+
+echo "###########################################################################"
+echo "#Escrito por Saulo Quintal                                                #"
+echo "#Script escrito para processo de backup automatizado do zabbix no bacula.#"
+echo "#Script livre para reprodução e alteração.                                #"
+echo "#Contato: sauloquintal@gmail.com                                          #"
+echo "###########################################################################"
+echo "---------------------------------------------------------------------------"
+
+###Realizando backup somente do schema do banco de dados###
+sudo mysqldump --no-data --single-transaction -u$DBUSER -p"$DBPASS" "$DBNAME" | /bin/gzip > "$BK_DEST/$DBNAME-`date +%Y-%m-%d`-schema.sql.gz"
+
+##REALIZANDO BACKUP DO BANCO ZABBIX IGNORANDO AS MAIORES TABELAS###
+sudo mysqldump -u"$DBUSER"  -p"$DBPASS" "$DBNAME" --single-transaction --skip-lock-tables --routines --triggers --no-create-info --no-create-db \
+    --ignore-table="$DBNAME.acknowledges" \
+    --ignore-table="$DBNAME.alerts" \
+    --ignore-table="$DBNAME.auditlog" \
+    --ignore-table="$DBNAME.auditlog_details" \
+    --ignore-table="$DBNAME.escalations" \
+    --ignore-table="$DBNAME.events" \
+    --ignore-table="$DBNAME.history" \
+    --ignore-table="$DBNAME.history_log" \
+    --ignore-table="$DBNAME.history_str" \
+    --ignore-table="$DBNAME.history_str_sync" \
+    --ignore-table="$DBNAME.history_sync" \
+    --ignore-table="$DBNAME.history_text" \
+    --ignore-table="$DBNAME.history_uint" \
+    --ignore-table="$DBNAME.history_uint_sync" \
+    --ignore-table="$DBNAME.dhosts" \
+    --ignore-table="$DBNAME.dservices" \
+    --ignore-table="$DBNAME.proxy_history" \
+    --ignore-table="$DBNAME.proxy_dhistory" \
+    --ignore-table="$DBNAME.trends" \
+    --ignore-table="$DBNAME.trends_uint" \
+    | /bin/gzip > "$BK_DEST/$DBNAME-`date +%Y-%m-%d`-config.sql.gz"
+
+echo "--------------------------------"
+echo "-PROCESSO DE BACKUP FINALIZADO!-"
+echo "--------------------------------"
